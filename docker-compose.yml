@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  consul:
+    image: consul
+    container_name: consul
+    ports:
+      - "8500:8500"
+      - "8600:8600/udp"
+    command: agent -dev -client=0.0.0.0
+
+  service-a:
+    build: ./services/service-a
+    container_name: service-a
+    environment:
+      - SERVICE_NAME=service-a
+    depends_on:
+      - consul
+
+  service-b:
+    build: ./services/service-b
+    container_name: service-b
+    environment:
+      - SERVICE_NAME=service-b
+    depends_on:
+      - consul
+
+  service-c:
+    build: ./services/service-c
+    container_name: service-c
+    environment:
+      - SERVICE_NAME=service-c
+    depends_on:
+      - consul
+
+  gateway:
+    build: ./gateway
+    container_name: gateway
+    ports:
+      - "3000:3000"
+    depends_on:
+      - consul
+      - service-a
+      - service-b
+      - service-c
