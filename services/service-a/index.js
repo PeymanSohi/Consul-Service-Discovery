@@ -1,5 +1,6 @@
 const express = require('express');
-const consul = require('consul')({ host: 'consul' });
+const Consul = require('consul');
+const consul = new Consul({ host: 'consul' });
 const { v4: uuidv4 } = require('uuid');
 
 const app = express();
